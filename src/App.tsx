@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
+import { RouteWrapper, SessionExpiredModal, WarningDialog } from '@rssa-project/study-template';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { RouteWrapper, WarningDialog, SessionExpiredModal } from '@rssa-project/study-template';
 import { componentMap } from './pages/componentMap';
 import WelcomePage from './pages/WelcomePage';
-import { STRINGS } from './utils/constants';
 import './styles/App.css';
+import { STRINGS } from './utils/constants';
 
 function App() {
     const [showWarning, setShowWarning] = useState<boolean>(false);
@@ -39,7 +39,7 @@ function App() {
                 />
             )}
             <SessionExpiredModal />
-            <Router basename="/preference-visualization/">
+            <Router>
                 <RouteWrapper componentMap={componentMap} WelcomePage={WelcomePage} />
             </Router>
         </div>

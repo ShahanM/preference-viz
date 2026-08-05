@@ -42,11 +42,10 @@ const ContinuousCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
         if (!data || !svgRef.current || width === 0 || height === 0) {
             return;
         }
-        const margin = { top: 20, right: 20, bottom: 60, left: 60 };
+        const margin = { top: 20, right: 0, bottom: 60, left: 55 };
         const availableWidth = width - margin.left - margin.right;
         const availableHeight = height - margin.top - margin.bottom;
 
-        // Force square aspect ratio based on the smaller dimension
         const size = Math.min(availableWidth, availableHeight);
         const innerWidth = size;
         const innerHeight = size;
@@ -65,7 +64,7 @@ const ContinuousCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
         const yScale = d3
             .scaleLinear()
             .domain([1, 5])
-            .range([innerHeight - yRangePadding, yRangePadding]); // Inverted Y, properly padded
+            .range([innerHeight - yRangePadding, yRangePadding]);
 
         const svg = d3.select(svgRef.current).attr('width', width).attr('height', height);
 
@@ -101,7 +100,7 @@ const ContinuousCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
 
         // X-axis label (Bottom) -> Corresponds to "Community Score" (from everyone else)
         g.append('text')
-            .attr('class', 'axis-label')
+            .attr('class', 'axis-label text-lg')
             .attr('transform', `translate(${innerWidth / 2}, ${innerHeight + margin.bottom - 10})`)
             .style('text-anchor', 'middle')
             .style('font-weight', 'bold')
@@ -109,15 +108,15 @@ const ContinuousCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
 
         // Y-axis label (Left) -> Corresponds to "User Score" (predicted for you)
         g.append('text')
+            .attr('class', 'text-lg')
             .attr('transform', 'rotate(-90)')
-            .attr('y', 0 - margin.left + 15) // Adjusted position
+            .attr('y', 0 - margin.left + 9)
             .attr('x', 0 - innerHeight / 2)
             .attr('dy', '1em')
             .style('text-anchor', 'middle')
             .style('font-weight', 'bold')
             .text(X_AXIS_LABEL_ONE);
 
-        // Right and Top borders to close the chart box
         g.append('line')
             .attr('x1', innerWidth)
             .attr('y1', 0)
@@ -159,10 +158,9 @@ const ContinuousCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
             posterHeight: POSTER_HEIGHT,
             innerWidth,
             innerHeight,
-            scaleFactor: 2.0, // Coupled uses 2.0 scale
+            scaleFactor: 2.0,
         });
 
-        // Invisible Hit Area (Stays centered at 0,0 of the group)
         nodes
             .append('rect')
             .attr('class', 'hit-area')
@@ -170,12 +168,11 @@ const ContinuousCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
             .attr('height', totalH)
             .attr('x', -totalW / 2)
             .attr('y', -totalH / 2)
-            .attr('fill', 'transparent'); // Invisible but catches events
+            .attr('fill', 'transparent');
 
         const content = nodes.append('g').attr('class', 'node-content');
         const { image } = appendStyledPoster(content, POSTER_WIDTH, POSTER_HEIGHT);
 
-        // Bind data-specific attributes to the image
         image.attr('xlink:href', (d: DataAugmentedItem) => d.tmdb_poster);
 
         if (isFisheye) {

@@ -31,8 +31,7 @@ const StudyOverviewPage: React.FC = () => {
 
     return (
         <div className="w-full justify-items-center">
-            {/* <div className="p-5 m-3 text-left max-w-270"> */}
-            <div className="flex flex-between text-2xl mb-3 max-w-270">
+            <div className="flex flex-between text-2xl mb-3 max-w-300">
                 {stepCards.map((card, idx) => (
                     <div key={idx}>
                         <img src={card.img} alt={card.text} />

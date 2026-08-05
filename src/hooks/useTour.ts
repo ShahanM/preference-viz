@@ -60,7 +60,8 @@ export const useTour = () => {
                         element: '#participant-response-panel',
                         popover: {
                             title: 'Your Task',
-                            description: 'This is where you write your reflection notes.',
+                            description:
+                                'This is where you write your reflection notes. Please try to write more than a few words.',
                             side: 'right',
                         },
                     },
@@ -98,21 +99,21 @@ export const useTour = () => {
                             side: 'right',
                         },
                     },
-                    {
-                        element: '#save-response-btn',
-                        popover: {
-                            title: 'Save Progress',
-                            description:
-                                "Don't forget to save your drafts! The button will be enabled when you have unsaved changes.",
-                            side: 'left',
-                        },
-                    },
+                    // {
+                    //     element: '#save-response-btn',
+                    //     popover: {
+                    //         title: 'Save Progress',
+                    //         description:
+                    //             "Don't forget to save your drafts! The button will be enabled when you have unsaved changes.",
+                    //         side: 'left',
+                    //     },
+                    // },
                     {
                         element: 'nav button',
                         popover: {
                             title: 'Proceed',
                             description:
-                                'Once you are satisfied with your responses, click Next to proceed to the next step of the study.',
+                                'Once you are satisfied with your responses, click Next to proceed to the next step of the study. Note: if the button is not activated you might need to write a little more in each box, or you must have finished too quick.',
                             side: 'top',
                         },
                     },

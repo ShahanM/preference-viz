@@ -56,14 +56,14 @@ const ContinuousDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRec
     useEffect(() => {
         if (!simNodeData || width === 0 || height === 0) return;
 
-        const numCharts = showCommunity ? 2 : 1; // We want to use the full height for 1 chart
-        const svgHeight = height / numCharts;
+        // const numCharts = showCommunity ? 2 : 1;
+        // const svgHeight = height / numCharts;
+        const svgHeight = posterHeight * 4;
 
         const margin = { top: 20, right: 15, bottom: 60, left: 10 };
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = svgHeight - margin.top - margin.bottom;
 
-        // Scale 1-5, with padding to keep posters (centers) inside
         const xRangePadding = posterWidth / 2;
         const xScale = d3
             .scaleLinear()
@@ -80,12 +80,10 @@ const ContinuousDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRec
             const svg = d3.select(svgRef).attr('width', width).attr('height', svgHeight);
             svg.selectAll('*').remove();
 
-            // Background rect to capture mouse events across the full area and clear sticky state
             const bg = svg.append('rect').attr('width', width).attr('height', svgHeight).attr('fill', 'transparent');
 
             bg.on('click', () => {
                 if (stickyIdRef.current) {
-                    // Reset all nodes
                     d3.selectAll<SVGGElement, DataAugmentedItem>('.movie-node').each(function () {
                         const content = d3.select(this).select('.node-content');
                         content.transition().duration(200).attr('transform', 'translate(0,0) scale(1)');
@@ -105,16 +103,14 @@ const ContinuousDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRec
                 `.grid line { stroke: #ccccccff; stroke-opacity: 0.7; shape-rendering: crispEdges; }`
             );
 
-            // Explicitly draw the right-side boundary line to close the chart
             g.append('line')
                 .attr('x1', innerWidth)
                 .attr('y1', 0)
                 .attr('x2', innerWidth)
                 .attr('y2', innerHeight)
-                .attr('stroke', '#000000') // Match axis color (usually black or dark grey)
+                .attr('stroke', '#000000')
                 .attr('shape-rendering', 'crispEdges');
 
-            // Render Grid and Axes
             const { xLines, xTicks } = renderVizGrid(
                 g,
                 { xScale, yScale },
@@ -123,13 +119,12 @@ const ContinuousDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRec
                     drawYGridLines: true,
                     drawYAxis: true,
                     hideYAxisLabels: true,
-                    // Use scale roughly matching ~25 ticks over 0-5 domain, as per legacy code
                     yTickValues: d3.ticks(0, 5, 25),
                 }
             );
 
-            // X-axis label
             svg.append('text')
+                .attr('class', 'text-lg')
                 .attr('x', innerWidth / 2 + margin.left)
                 .attr('y', svgHeight - 5)
                 .style('text-anchor', 'middle')
@@ -141,12 +136,11 @@ const ContinuousDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRec
                 .data(dataArrays[i], (d: DataAugmentedItem) => d.id)
                 .join('g')
                 .attr('class', (d) => `movie-node node-id-${d.id}`)
-                .attr('data-ox', (d) => xScale(d.x!)) // Original linear pos center X
-                .attr('data-oy', innerHeight / 2) // Center Y
+                .attr('data-ox', (d) => xScale(d.x!))
+                .attr('data-oy', innerHeight / 2)
                 .attr('transform', (d) => `translate(${xScale(d.x!)}, ${innerHeight / 2})`)
                 .style('cursor', 'pointer');
 
-            // Attach shared interaction logic (Hover, Click/Sticky, Edge-Aware)
             attachNodeInteractions(nodes, {
                 onHoverRef,
                 onInteractRef,
@@ -155,13 +149,11 @@ const ContinuousDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRec
                 posterHeight: posterHeight,
                 innerWidth,
                 innerHeight,
-                scaleFactor: 1.5, // Decoupled uses 1.5 scale
+                scaleFactor: 1.5,
             });
 
-            // Creates an inner group for content (poster + rect) that handles SCALING
             const contentGroups = nodes.append('g').attr('class', 'node-content');
 
-            // Append styled content to the INNER group
             const { image } = appendStyledPoster(contentGroups, posterWidth, posterHeight);
             image.attr('xlink:href', (d: DataAugmentedItem) => d.tmdb_poster);
 
@@ -174,7 +166,7 @@ const ContinuousDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRec
                         dimensions: { innerWidth, innerHeight, margin },
                         isFisheye,
                         getX: (d: DataAugmentedItem) => d.x!,
-                        getY: () => innerHeight / 2, // Fixed Y
+                        getY: () => innerHeight / 2,
                         mode: '1D',
                     }
                 );
@@ -188,8 +180,14 @@ const ContinuousDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRec
 
     return (
         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <svg ref={setSvgRef(0)} style={{ display: 'block' }}></svg>
-            {showCommunity && <svg ref={setSvgRef(1)} style={{ display: 'block' }}></svg>}
+            <div className="pb-3 mb-5 bg-amber-50 rounded-lg">
+                <svg ref={setSvgRef(0)} style={{ display: 'block' }}></svg>
+            </div>
+            {showCommunity && (
+                <div className="pb-3 mt-5 bg-purple-50 rounded-lg">
+                    <svg ref={setSvgRef(1)} style={{ display: 'block' }} className="mt-5"></svg>
+                </div>
+            )}
         </div>
     );
 };

@@ -167,7 +167,7 @@ export const attachNodeInteractions = <T extends { id: string }>(
                     if (cx < expandedHalfW) shiftX = expandedHalfW - cx + safeMargin;
                     else if (cx > innerWidth - expandedHalfW) shiftX = innerWidth - expandedHalfW - safeMargin - cx;
 
-                    let shiftY = 0;
+                    let shiftY = -20;
                     if (cy < expandedHalfH) shiftY = expandedHalfH - cy + safeMargin;
                     else if (cy > innerHeight - expandedHalfH) shiftY = innerHeight - expandedHalfH - safeMargin - cy;
 
@@ -202,7 +202,7 @@ export const attachNodeInteractions = <T extends { id: string }>(
         });
 };
 
-export const X_AXIS_LABEL_ONE = "The system's predicted movie rating for you";
+export const X_AXIS_LABEL_ONE = "The system's predicted movie ratings for you";
 export const Y_AXIS_LABEL_ONE = 'Ratings from everyone else in the system';
 
 export type VizScales = {

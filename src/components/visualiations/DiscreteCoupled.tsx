@@ -11,8 +11,8 @@ import { appendStyledPoster, attachNodeInteractions, fisheye, PADDING } from '..
 const likeCuttoff = LIKE_CUTOFF;
 const dislikeCuttoff = DISLIKE_CUTOFF;
 const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-const rowHeaderWidth = 30; // Reduced from 100 to give more space
-const colHeaderHeight = 30; // Reduced from 100
+const rowHeaderWidth = 30;
+const colHeaderHeight = 30;
 
 const DiscreteCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecommendedItem>> = ({
     width,
@@ -55,7 +55,6 @@ const DiscreteCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecomme
     useEffect(() => {
         if (!width || !height) return;
 
-        // Calculate available space for the quadrants
         const availableWidth = width - rowHeaderWidth - margin.left - margin.right;
         const availableHeight = height - colHeaderHeight - margin.top - margin.bottom;
 
@@ -75,17 +74,14 @@ const DiscreteCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecomme
 
             svg.selectAll('*').remove();
 
-            // Background rect for events
             const bg = svg
                 .append('rect')
                 .attr('width', quadrantWidth)
                 .attr('height', quadrantHeight)
                 .attr('fill', 'transparent');
 
-            // Click bg to clear sticky
             bg.on('click', () => {
                 if (stickyIdRef.current) {
-                    // Reset visual state of all nodes globally (simplest safety)
                     d3.selectAll<SVGGElement, unknown>('.movie-node').each(function () {
                         const content = d3.select(this).select('.node-content');
                         content.transition().duration(200).attr('transform', 'translate(0,0) scale(1)');
@@ -159,7 +155,6 @@ const DiscreteCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecomme
                 .attr('data-ox', (d) => d.x)
                 .attr('data-oy', (d) => d.y);
 
-            // Hit Area
             nodes
                 .append('rect')
                 .attr('class', 'hit-area')
@@ -169,7 +164,6 @@ const DiscreteCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecomme
                 .attr('y', -totalPosterH / 2)
                 .attr('fill', 'transparent');
 
-            // Attach Interactions
             attachNodeInteractions(nodes, {
                 onHoverRef,
                 onInteractRef,
@@ -181,17 +175,14 @@ const DiscreteCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecomme
                 scaleFactor: 1.5,
             });
 
-            // Content
             const content = nodes.append('g').attr('class', 'node-content');
             const { image } = appendStyledPoster(content, POSTER_WIDTH, POSTER_HEIGHT);
             image.attr('xlink:href', (d: PreferenceVizRecommendedItem) => d.tmdb_poster);
 
-            // Fisheye Logic
             if (isFisheye) {
                 svg.on('mousemove', (event) => {
                     const [mx, my] = d3.pointer(event);
 
-                    // Only distort if inside bounds (padding)
                     if (mx < 0 || mx > quadrantWidth || my < 0 || my > quadrantHeight) return;
 
                     const df = 3.0;
@@ -224,7 +215,6 @@ const DiscreteCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecomme
 
     return (
         <div className="flex w-full h-full">
-            {/* Y Axis Label Area */}
             <div className="flex flex-col justify-center items-center" style={{ width: '30px' }}>
                 <p
                     style={{
@@ -244,7 +234,7 @@ const DiscreteCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecomme
             <div className="flex-1 flex flex-col">
                 <div className="flex flex-col flex-1">
                     <div className="flex flex-row h-8">
-                        <div className="w-8"></div> {/* Spacer for row headers */}
+                        <div className="w-8"></div>
                         <div className="flex-1 flex items-center justify-center font-bold">Likes</div>
                         <div className="flex-1 flex items-center justify-center font-bold">Dislikes</div>
                     </div>
@@ -285,7 +275,6 @@ const DiscreteCoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecomme
                         </div>
                     </div>
                 </div>
-                {/* X Axis Label */}
                 <div className="h-8 flex items-center justify-center font-bold">Everyone else</div>
             </div>
         </div>

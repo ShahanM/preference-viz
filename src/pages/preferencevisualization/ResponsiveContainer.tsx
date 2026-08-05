@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
+const HW_RATIO = 1.5;
 interface ResponsiveContainerProps {
     children: (width: number, height: number) => React.ReactNode;
 }
@@ -34,7 +35,10 @@ const ResponsiveContainer: React.FC<ResponsiveContainerProps> = ({ children }) =
 
     return (
         <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
-            {children(dimensions.width, dimensions.height)}
+            {children(
+                dimensions.width,
+                dimensions.height <= HW_RATIO * dimensions.width ? dimensions.height : HW_RATIO * dimensions.width
+            )}
         </div>
     );
 };

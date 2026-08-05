@@ -9,9 +9,8 @@ export default defineConfig(() => {
         optimizeDeps: {
             exclude: ['@rssa-project/study-template'],
         },
-        base: '/preference-visualization/',
         build: {
-            outDir: 'build',
+            outDir: 'dist',
         },
         server: {
             port: 3350,

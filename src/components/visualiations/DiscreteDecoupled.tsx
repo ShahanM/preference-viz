@@ -10,8 +10,8 @@ import { appendStyledPoster, attachNodeInteractions, fisheye, PADDING } from '..
 
 const likeCuttoff = LIKE_CUTOFF;
 const dislikeCuttoff = DISLIKE_CUTOFF;
-const margin = { top: 20, right: 20, bottom: 30, left: 40 }; // Define margins
-const rowHeaderWidth = 100;
+const margin = { top: 0, right: 0, bottom: 0, left: 0 };
+// const rowHeaderWidth = 100;
 const colHeaderHeight = 100;
 const numCols = 2;
 
@@ -63,7 +63,7 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
 
         const effectiveNumRows = showCommunity ? 2 : 1;
 
-        const innerWidth = width - rowHeaderWidth - margin.left - margin.right;
+        const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - colHeaderHeight - margin.top - margin.bottom;
         const svgWidth = innerWidth / numCols;
         const svgHeight = innerHeight / effectiveNumRows;
@@ -96,7 +96,6 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
 
             const g = svg.append<SVGGElement>('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
-            // Using margin 0 for internal SVG content simplifies things for these small boxes.
             g.attr('transform', 'translate(0,0)');
             const quadrantWidth = svgWidth;
             const quadrantHeight = svgHeight;
@@ -108,7 +107,6 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
             const usableWidth = quadrantWidth - 2 * CONTAINER_PADDING;
             const usableHeight = quadrantHeight - 2 * CONTAINER_PADDING;
 
-            // Calculate optimal columns to match aspect ratio
             const count = ctxData.length;
             const posterRatio = POSTER_WIDTH / POSTER_HEIGHT; // ~0.66
             const viewRatio = usableWidth / usableHeight;
@@ -118,7 +116,6 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
             cols = Math.max(1, Math.min(count, cols));
             const rows = Math.ceil(count / cols);
 
-            // Calculate spacings (allowing overlap if needed)
             const stepX = cols > 1 ? (usableWidth - POSTER_WIDTH) / (cols - 1) : 0;
             const stepY = rows > 1 ? (usableHeight - POSTER_HEIGHT) / (rows - 1) : 0;
 
@@ -148,7 +145,6 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
                         y = CONTAINER_PADDING + POSTER_HEIGHT / 2 + row * stepY;
                     }
 
-                    // Attach calculated position
                     d.x = x;
                     d.y = y;
 
@@ -157,7 +153,6 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
                 .attr('data-ox', (d) => d.x)
                 .attr('data-oy', (d) => d.y);
 
-            // Hit Area
             nodes
                 .append('rect')
                 .attr('class', 'hit-area')
@@ -167,7 +162,6 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
                 .attr('y', -totalPosterH / 2)
                 .attr('fill', 'transparent');
 
-            // Attach Interactions
             attachNodeInteractions(nodes, {
                 onHoverRef,
                 onInteractRef,
@@ -179,7 +173,6 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
                 scaleFactor: 1.5,
             });
 
-            // Content
             const content = nodes.append('g').attr('class', 'node-content');
             const { image } = appendStyledPoster(content, POSTER_WIDTH, POSTER_HEIGHT);
             image.attr('xlink:href', (d) => d.tmdb_poster);
@@ -237,7 +230,7 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
                         <svg ref={setSvgRef('myLikes')} className="w-full h-full"></svg>
                     </div>
                 </div>
-                <p className="p-1 bg-amber-400 font-bold rounded-b-md z-10 relative">
+                <p className="p-1 bg-amber-400 font-bold text-lg rounded-b-md z-10 relative">
                     The system's predicted movie rating for you
                 </p>
             </div>
@@ -258,7 +251,7 @@ const DiscreteDecoupled: React.FC<PreferenceVizComponentProps<PreferenceVizRecom
                             <svg ref={setSvgRef('commLikes')} className="w-full h-full"></svg>
                         </div>
                     </div>
-                    <p className="p-1 bg-amber-400 font-bold rounded-b-md z-10 relative">
+                    <p className="p-1 bg-amber-400 font-bold text-lg rounded-b-md z-10 relative">
                         Ratings from everyone else in the system
                     </p>
                 </div>

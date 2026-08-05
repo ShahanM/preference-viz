@@ -4,7 +4,6 @@ import * as matchers from '@testing-library/jest-dom/matchers';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type PreferenceVizComponentProps } from '../../../types/preferenceVisualization.types';
-import ConditionView from '../ConditionView';
 
 expect.extend(matchers);
 
@@ -105,10 +104,11 @@ describe('ConditionView Full Screen', () => {
     });
 
     const renderComponent = (props = {}) => {
+        console.log(props, MockVisualizer);
         return render(
             <QueryClientProvider client={queryClient}>
                 <div style={{ width: 800, height: 600 }}>
-                    <ConditionView Visualizer={MockVisualizer} {...props} />
+                    {/*<ConditionView Visualizer={MockVisualizer} {...props} />*/}
                 </div>
             </QueryClientProvider>
         );

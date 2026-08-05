@@ -30,6 +30,7 @@ if (import.meta.hot) {
         }
     });
 }
+
 declare module '@tanstack/react-query' {
     interface Register {
         defaultError: ApiError;

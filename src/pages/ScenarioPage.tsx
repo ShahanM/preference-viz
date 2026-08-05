@@ -24,7 +24,7 @@ const ScenarioPage: React.FC = () => {
     }, [setIsStepComplete, showButtonLoader]);
     return (
         <div className="w-full justify-items-center">
-            <div className="p-5 m-3 text-left max-w-270">
+            <div className="p-5 m-3 text-left max-w-300">
                 <PCallout>Your task</PCallout>
                 <p className="mt-3">
                     Imagine you are in a movie critiquing class. One of your assignments is to reflect on your movie

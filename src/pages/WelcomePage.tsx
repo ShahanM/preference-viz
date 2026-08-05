@@ -5,7 +5,7 @@ import { NumberedList, PCallout, PVSpaced } from '../components/styled/Font';
 const WelcomeContent: React.FC = () => {
     const steps = [
         'Complete a short pre-survey (~1 min)',
-        'Rate at least 10 movies you are familiar with, to let the system know your preferences (~ 3 min).',
+        'Rate at least 15 movies you are familiar with, to let the system know your preferences (~ 3 min).',
         'Write reflection notes while interacting with the system (~10 min).',
         'Complete a post-survey. (~3 min)',
     ];
@@ -31,8 +31,8 @@ const WelcomeContent: React.FC = () => {
 const WelcomePage: React.FC<{ isStudyReady: boolean; onStudyStart: () => void }> = (props) => {
     return (
         <GenericWelcomePage
-            title={'Welcome'}
-            subtitle={'Movie Preferences'}
+            title={'The Preference Visualization Study'}
+            subtitle={''}
             {...props}
             ContentComponent={WelcomeContent}
         />

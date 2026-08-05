@@ -25,7 +25,7 @@ export interface UserPreferenceFeature {
 }
 
 export interface PreferenceVizRecommendationFeature extends UserPreferenceFeature, CommunityPreferenceFeature {
-    item_id: string; // Unified to string to match UUIDs
+    item_id: string;
     cluster: number;
 }
 
@@ -67,35 +67,83 @@ export interface PreferenceVizComponentProps<T = PreferenceVizRecommendedItem | 
     onInteract?: (eventType: VizTelemetryEvent, eventData?: Record<string, unknown>, itemId?: string) => void;
 }
 
-// ============================================================================
-// BACKEND RESPONSE SCHEMAS
-// ============================================================================
-export interface BackendCommunityScoreItem {
-    item: Movie;
-    community_score: number;
-    score: number;
-    community_label: number;
-    label: number;
-    cluster: number;
+export interface VisualizerContainerProps {
+    recommendations: PreferenceVizResponseObject;
+    Visualizer:
+        | React.FC<PreferenceVizComponentProps<PreferenceVizRecommendedItem>>
+        | React.FC<PreferenceVizComponentProps<Movie>>;
+    xCol?: string;
+    yCol?: string;
+    onHover: (id: string) => void;
+    onInteract: (event: string, data?: Record<string, unknown>, id?: string) => void;
+    isFisheye?: boolean;
 }
 
-export interface BackendRecommendationResponse {
-    [key: string]: BackendCommunityScoreItem | Movie;
+export interface ConditionViewProps {
+    Visualizer:
+        | React.FC<PreferenceVizComponentProps<PreferenceVizRecommendedItem>>
+        | React.FC<PreferenceVizComponentProps<Movie>>;
+    xCol?: string;
+    yCol?: string;
+    // recommendationType?: RecommendationType;
+    recommendations: PreferenceVizResponseObject;
+    rightPanelProps?: { likeCutoff: number; dislikeCutoff: number; showLikeDislikeByLine: boolean };
+    infoPanelLayout?: 'overlay' | 'sidebar';
+    isFisheye?: boolean;
+    isLoading: boolean;
+    // onDataLoaded?: () => void;
+    onFullScreenChange?: (isFullScreen: boolean) => void;
 }
 
-export interface BackendResponsePayload {
-    response_type: 'standard' | 'community_comparison';
-    items: BackendRecommendationResponse;
+export interface FullScreenConditionModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    infoPanelLayout: 'overlay' | 'sidebar';
+    rightPanelProps?: {
+        likeCutoff: number;
+        dislikeCutoff: number;
+        showLikeDislikeByLine: boolean;
+    };
+    recommendations: PreferenceVizResponseObject;
+    Visualizer:
+        | React.FC<PreferenceVizComponentProps<PreferenceVizRecommendedItem>>
+        | React.FC<PreferenceVizComponentProps<Movie>>;
+    visualizerProps: {
+        xCol: string;
+        yCol: string;
+        isFisheye?: boolean;
+        onInteract: (event: string, data?: Record<string, unknown>, id?: string) => void;
+        onHover: (item_id: string) => void;
+    };
+    setSelectedMovie: (movie: PreferenceVizRecommendedItem | Movie | undefined) => void;
 }
+// ============================================================================
+// BACKEND RESPONSE SCHEMAS (Generic & Ready for rssa-api)
+// ============================================================================
 
 export interface RecommendationRequestPayload {
     step_id: string;
     step_page_id?: string;
     context_tag: string;
-    response_type?: RecommendationType;
+    // Exactly matches Python's StandardRecContext and EmotionRecContext
+    schema_type?: 'standard' | 'standard_emotion' | 'community_comparison' | 'community_advisors';
     algorithm_key?: string;
+    emotion_input?: Record<string, number | string>;
 }
 
+export interface EnrichedResponseWrapper<T> {
+    response_type: 'standard' | 'community_comparison' | 'community_advisors' | string;
+    items: T[];
+}
+
+export interface EnrichedCommunityScoreItem<T = any> {
+    item: T;
+    community_score: number;
+    community_label: number;
+    score: number;
+    label: number;
+    cluster: number;
+}
 // ============================================================================
 // ESSAY / INTERACTION SCHEMAS
 // ============================================================================

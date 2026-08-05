@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
 import type { PreferenceVizComponentProps } from '../../types/preferenceVisualization.types';
 import type { Movie } from '@rssa-project/study-template';
+import clsx from 'clsx';
 
-const posterHeight = 81;
+// const posterHeight = 81;
 
 const BaselineMovieItem: React.FC<{
     item: Movie;
@@ -10,7 +11,6 @@ const BaselineMovieItem: React.FC<{
     onInteract?: PreferenceVizComponentProps<Movie>['onInteract'];
 }> = ({ item, onHover, onInteract }) => {
     const hoverStartTimeRef = useRef<number | null>(null);
-
     const handleMouseEnter = () => {
         hoverStartTimeRef.current = performance.now();
         onHover(item.id);
@@ -38,8 +38,12 @@ const BaselineMovieItem: React.FC<{
     }, [onInteract, item.id]);
 
     return (
-        <div className="flex gap-3 shadow-sm p-1" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <img className="h-45" src={item.poster} height={posterHeight} alt={item.title} />
+        <div
+            className="flex gap-3 shadow-sm m-1 border border-amber-400 rounded-md"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <img className="h-54 border-stone-900 rounded-md" src={item.tmdb_poster} alt={item.title} />
             {/* <div>
                 <div className="flex gap-1">
                     <p className="text-base">{item.title}</p>
@@ -53,7 +57,17 @@ const BaselineMovieItem: React.FC<{
 
 const Baseline: React.FC<PreferenceVizComponentProps<Movie>> = ({ data, onHover, onInteract }) => {
     return (
-        <div className="m-3 gap-1 overflow-x-auto" style={{ maxHeight: '900px' }}>
+        <div
+            className={clsx(
+                'justify-items-center',
+                'm-3 gap-1 max-h-225 overflow-y-auto',
+                '[&::-webkit-scrollbar]:w-1.5',
+                '[&::-webkit-scrollbar-track]:bg-transparent',
+                '[&::-webkit-scrollbar-thumb]:bg-gray-300',
+                '[&::-webkit-scrollbar-thumb]:rounded-full',
+                'hover:[&::-webkit-scrollbar-thumb]:bg-gray-400'
+            )}
+        >
             {Object.entries(data).map(([k, item]) => (
                 <BaselineMovieItem key={`rec-movies-${k}`} item={item} onHover={onHover} onInteract={onInteract} />
             ))}
